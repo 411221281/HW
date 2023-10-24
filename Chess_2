@@ -1,0 +1,65 @@
+#include <stdio.h>
+#define BLACKCHESS 1
+#define WHITECHESS 2
+#define SIZE 8
+
+int chess[SIZE][SIZE] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 2, 1, 0, 0, 0},
+    {0, 0, 0, 1, 2, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+};
+int record[SIZE][SIZE];
+int dic_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+int dic_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
+
+void findPos(int n,int x, int y) {
+    int ans_x, ans_y;
+
+    for (int i = 0; i < 8; i++) {
+        ans_x = x+dic_x[i], ans_y = y+dic_y[i];
+        if(chess[ans_x][ans_y] == 0) {
+            continue;
+        }
+
+        while (chess[ans_x][ans_y] != n) {
+            ans_x += dic_x[i];
+            ans_y += dic_y[i];
+            if (ans_x >= 8 || ans_x < 0 || ans_y >= 8 || ans_y < 0) {
+                break;
+            }
+            if (chess[ans_x][ans_y] == 0) {
+                printf("(%d, %d)", ans_x, ans_y);
+                break;
+            }
+        }
+    }
+}
+
+int check(int i, int j) {
+
+    int color;
+    if(chess[i][j] == 0) {
+        return 0;
+    }
+    if(chess[i][j] == 2) {
+        findPos(2, i, j);
+        return 1;
+    }
+    if(chess [i][j] == 1) {
+        findPos(1, i, j);
+        return 1;
+    }
+}
+
+int main() {
+
+    int i, j;
+    scanf("%d %d", &i, &j);
+    check(i, j);
+    return 0;
+}
