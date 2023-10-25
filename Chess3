@@ -16,25 +16,25 @@ int chess[SIZE][SIZE]= {
 
 int record[SIZE][SIZE];
 
-//int dic_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
-//int dic_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
+int dic_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+int dic_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
 
     //找位置並計算步數
 void findPos(int color, int x, int y) {
-    int dic_x, dic_y;
-    scanf("%d %d", &dic_x, &dic_y);
     int anal_x, anal_y, n_step = 0;
-        anal_x = x + dic_x;
-        anal_y = y + dic_y;
-
-        if(chess[anal_x][anal_y] == 0) { 
-            return;
+    //int dic_x, dic_y;
+    //scanf("%d %d", &dic_x, &dic_y);
+    for (int i = 0; i < 8; i++) {
+        anal_x = x + dic_x[i];
+        anal_y = y + dic_y[i];
+        if(chess[anal_x][anal_y] == 0) {
+            continue;
         }
 
         while(chess[anal_x][anal_y] != color) {
 
-            anal_x += dic_x;
-            anal_y += dic_y;
+            anal_x += dic_x[i];
+            anal_y += dic_y[i];
 
             if(anal_x < 0 || anal_y < 0 || anal_x > 7 || anal_y > 7) {
                 break;
@@ -42,11 +42,11 @@ void findPos(int color, int x, int y) {
             n_step ++;
 
             if(chess[anal_x][anal_y] == 0) {
-                printf("(%d,%d) Far from (%d,%d) %d steps", anal_x, anal_y, x, y, n_step);
+                printf("(%d,%d) Far from (%d,%d) %d steps\n", anal_x, anal_y, x, y, n_step);
+                break;
             }
-
-            break;
         }
+    }
 }
 
     //判斷輸入棋子顏色
