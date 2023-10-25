@@ -19,14 +19,14 @@ int record[SIZE][SIZE];
 int dic_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
 int dic_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
 
-    //找位置並計算步數
+    //判斷八個方位 找可下位置並計算步數
 void findPos(int color, int x, int y) {
     int anal_x, anal_y, n_step = 0;
-    //int dic_x, dic_y;
-    //scanf("%d %d", &dic_x, &dic_y);
+    
     for (int i = 0; i < 8; i++) {
         anal_x = x + dic_x[i];
         anal_y = y + dic_y[i];
+        
         if(chess[anal_x][anal_y] == 0) {
             continue;
         }
