@@ -16,22 +16,25 @@ int chess[SIZE][SIZE]= {
 
 int record[SIZE][SIZE];
 
+//int dic_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+//int dic_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
+
     //找位置並計算步數
 void findPos(int color, int x, int y) {
-    int dx, dy;
-    scanf("%d %d", &dx, &dy);
+    int dic_x, dic_y;
+    scanf("%d %d", &dic_x, &dic_y);
     int anal_x, anal_y, n_step = 0;
-        anal_x = x + dx;
-        anal_y = y + dy;
+        anal_x = x + dic_x;
+        anal_y = y + dic_y;
 
         if(chess[anal_x][anal_y] == 0) { 
             return;
         }
 
         while(chess[anal_x][anal_y] != color) {
-            
-            anal_x += dx;
-            anal_y += dy;
+
+            anal_x += dic_x;
+            anal_y += dic_y;
 
             if(anal_x < 0 || anal_y < 0 || anal_x > 7 || anal_y > 7) {
                 break;
