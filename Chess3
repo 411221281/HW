@@ -1,0 +1,68 @@
+#include <stdio.h>
+#define SIZE 8
+#define BLACHCHESS 1
+#define WHITECHESS 2
+
+int chess[SIZE][SIZE]= {
+                        {0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 2, 1, 0, 0, 0},
+                        {0, 0, 0, 1, 2, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0},
+                        {0, 0, 0, 0, 0, 0, 0, 0}
+};
+
+int record[SIZE][SIZE];
+
+    //找位置並計算步數
+void findPos(int color, int x, int y) {
+    int dx, dy;
+    scanf("%d %d", &dx, &dy);
+    int anal_x, anal_y, n_step = 0;
+        anal_x = x + dx;
+        anal_y = y + dy;
+
+        if(chess[anal_x][anal_y] == 0) { 
+            return;
+        }
+
+        while(chess[anal_x][anal_y] != color) {
+            
+            anal_x += dx;
+            anal_y += dy;
+
+            if(anal_x < 0 || anal_y < 0 || anal_x > 7 || anal_y > 7) {
+                break;
+            }
+            n_step ++;
+
+            if(chess[anal_x][anal_y] == 0) {
+                printf("(%d,%d) Far from (%d,%d) %d steps", anal_x, anal_y, x, y, n_step);
+            }
+
+            break;
+        }
+}
+
+    //判斷輸入棋子顏色
+int check(int i, int j) {
+
+    if(chess[i][j] == 0) {
+        return 0;
+    }
+    if(chess[i][j] == 1) {
+        findPos(1, i, j);
+    }
+    if(chess[i][j] == 2) {
+        findPos(2, i, j);
+    }
+}
+
+int main() {
+    int i, j;
+    scanf("%d %d", &i, &j);
+    check(i, j);
+    return 0;
+}
