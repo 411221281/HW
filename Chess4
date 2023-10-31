@@ -1,0 +1,109 @@
+#include <stdio.h>
+#define SIZE 8
+#define BLACHCHESS 1
+#define WHITECHESS 2
+
+void printBoard(int chess[SIZE][SIZE]);
+void allPos(int chess[SIZE][SIZE]);
+int findPos(int chess[SIZE][SIZE], int x, int y, int dic_x ,int dic_y);
+
+// 八個判斷方位
+int ori_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+int ori_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
+
+// 輸出棋盤
+void printBoard(int chess[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%d ",chess[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// 找所有白or黑棋可下位置
+void allPos(int chess[SIZE][SIZE]) {
+    printBoard(chess);
+    printf("All the position that can be set:\n");
+    for (int color = BLACHCHESS; color <= WHITECHESS; color++) {
+        switch(color) {
+        case BLACHCHESS:
+            printf("Black chess : \n");
+            break;
+        case WHITECHESS:
+            printf("White chess : \n");
+            break;
+        }
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (chess[i][j] == color) {
+                    for (int k = 0; k < 8; k++) {
+                        findPos(chess, i, j, ori_x[k], ori_y[k]);
+                    }
+                }
+            }
+        }
+        printf("\n");
+    }
+}
+
+// 找特定旗子且特定方位可輸出的位置
+int findPos(int chess[SIZE][SIZE], int x, int y, int dic_x, int dic_y) {
+
+    if (chess[x][y] == 0) {
+        return 0;
+    }
+    int color = chess[x][y];
+    int anal_x, anal_y, n_step = 0;
+        anal_x = x + dic_x;
+        anal_y = y + dic_y;
+
+        if(chess[anal_x][anal_y] == 0) { 
+            return 0;
+        }
+
+        while(chess[anal_x][anal_y] != color) {
+
+            anal_x += dic_x;
+            anal_y += dic_y;
+
+            if(anal_x < 0 || anal_y < 0 || anal_x > 7 || anal_y > 7) {
+                break;
+            }
+            n_step ++;
+
+            if(chess[anal_x][anal_y] == 0) {
+                printf("(%d, %d)",anal_x ,anal_y);
+                return n_step;
+            }
+        }
+        return 0; // 回傳值 回傳1表示找到可以下棋的位置;
+}
+
+int main() {
+    int i, j;
+    int dx, dy;
+    int step;
+    int chess[SIZE][SIZE]= {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 2, 1, 0, 0, 0},
+        {0, 0, 0, 1, 2, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0}
+};
+
+    scanf("%d %d", &i, &j);
+    scanf("%d %d", &dx, &dy);
+    step = findPos(chess, i, j, dx, dy);
+    if(step != 0) {
+        printf(" Far from (%d,%d) %d steps\n", i, j, step);
+    }
+    else {
+        printf("no position can be set for (%d, %d)\n", i, j);
+    }
+    allPos(chess);
+    return 0;
+}
