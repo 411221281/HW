@@ -1,0 +1,192 @@
+// 作業五
+
+#include <stdio.h>
+#define SIZE 8
+#define BLACHCHESS 1
+#define WHITECHESS 2
+
+// 八個判斷方位
+int ori_x[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+int ori_y[8] = {-1, 0, 1, 1, -1, 0, -1, 1};
+
+void printBoard(int chess[SIZE][SIZE]);
+int allPos(int chess[SIZE][SIZE]);
+int findPos(int chess[SIZE][SIZE], int x, int y, int dic_x ,int dic_y);
+void putChessOn(int chess[SIZE][SIZE], int x, int y, int color);
+
+// 輸出棋盤
+void printBoard(int chess[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%d ",chess[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// 找所有白or黑棋可下位置
+int allPos(int chess[SIZE][SIZE]) {
+    int counts = 0;
+    printBoard(chess);
+    printf("All the position that can be set:\n");
+    for (int color = BLACHCHESS; color <= WHITECHESS; color++) {
+        switch(color) {
+        case BLACHCHESS:
+            printf("Black chess : \n");
+            break;
+        case WHITECHESS:
+            printf("White chess : \n");
+            break;
+        }
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (chess[i][j] == color) {
+                    for (int k = 0; k < 8; k++) {
+                        counts += findPos(chess, i, j, ori_x[k], ori_y[k]);
+                    }
+                }
+            }
+        }
+        printf("\n");
+    }
+    // 沒有位置可輸出
+    if(counts == 0) {
+        return 0;
+    }
+    return 1;
+}
+
+// 找特定棋子且特定方位可輸出的位置
+int findPos(int chess[SIZE][SIZE], int x, int y, int dic_x, int dic_y) {
+
+    if (chess[x][y] == 0) {
+        return 0;
+    }
+    int color = chess[x][y];
+    int anal_x, anal_y, n_step = 0;
+        anal_x = x + dic_x;
+        anal_y = y + dic_y;
+
+        if(chess[anal_x][anal_y] == 0) { 
+            return 0;
+        }
+
+        while(chess[anal_x][anal_y] != color) {
+
+            anal_x += dic_x;
+            anal_y += dic_y;
+
+            if(anal_x < 0 || anal_y < 0 || anal_x > 7 || anal_y > 7) {
+                break;
+            }
+            n_step ++;
+
+            if(chess[anal_x][anal_y] == 0) {
+                printf("(%d, %d)",anal_x ,anal_y);
+                return n_step;
+            }
+        }
+        return 0; // 回傳值 回傳1表示找到可以下棋的位置;
+}
+    // 往特定方向檢查再次遇到同一顏色的棋子
+int check(int chess[SIZE][SIZE], int x, int y, int dic_x, int dic_y, int color) {
+    while(1) {
+        if (x < 0 || y < 0 || x >= SIZE || y >= SIZE) {
+            return 0;
+        }
+        x += dic_x;
+        y += dic_y;
+        if(chess[x][y] == color) {  
+            return 1;
+        }
+        if(chess[x][y] == 0) {
+            return 0;
+        }
+    }
+    return 0;
+}
+  // 翻棋 輸出被翻的棋子、數量
+void putChessOn(int chess[SIZE][SIZE], int x, int y, int color) {
+    int counts = 0;
+    for(int i = 0; i < 8; i++) {
+        chess[x][y] = color;
+        int anal_x = x + ori_x[i];
+        int anal_y = y + ori_y[i];
+        if(check(chess, x, y, ori_x[i], ori_y[i], color)) {
+            while(chess[anal_x][anal_y] != color && chess[anal_x][anal_y] != 0) {
+                chess[anal_x][anal_y] = color;
+                printf("(%d, %d)", anal_x, anal_y);
+                anal_x += ori_x[i];
+                anal_y += ori_y[i];
+                counts++;
+            }
+            
+        }
+    }
+    printf("\n");
+    printf("%d chess be turned", counts);
+}
+
+  // 比分、勝負狀況
+void judge(int chess[SIZE][SIZE]) {
+    int whiteCount = 0;
+    int blackCount = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            if (chess[SIZE][SIZE] == WHITECHESS) {
+                whiteCount++;
+            }
+            if (chess[SIZE][SIZE] == BLACHCHESS) {
+                blackCount++;
+            }
+        }
+    }
+    if(whiteCount > blackCount) {
+        printf("White win");
+    }
+    if(whiteCount < blackCount) {
+        printf("Black win");
+    }
+    if(whiteCount == blackCount) {
+        printf("Tie");
+    }
+    printf(" %d : %d", blackCount, whiteCount);
+}
+
+int main() {
+    int i, j;
+    int dx, dy;
+    int step;
+    int chess[SIZE][SIZE]= {
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 2, 1, 0, 0, 0},
+        {0, 0, 0, 1, 2, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0}
+    };
+
+    while (1) {
+        int counts;
+        counts++;
+        printf("\n");
+        if(allPos(chess) == 0) {
+            judge(chess);
+            break;
+        }
+        if(counts%2 == 1) {
+            printf("WHITE TURN :\n");
+            scanf("%d %d", &i, &j);
+            putChessOn(chess, i, j, WHITECHESS);
+        }
+        else {
+            printf("BLACK TURN :\n");
+            scanf("%d %d", &i, &j);
+            putChessOn(chess, i, j, BLACHCHESS);
+        }
+    }
+    
+    return 0;
+}
